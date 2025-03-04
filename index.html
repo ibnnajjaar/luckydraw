@@ -6,6 +6,25 @@
     <title>Lucky Number Generator</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 51;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -48,6 +67,17 @@
             </div>
         </div>
     </div>
+    <!-- Add modal markup at the end of body -->
+    <div class="modal-backdrop"></div>
+    <div class="modal hidden bg-white p-8 rounded-lg shadow-2xl w-80 text-center">
+        <div class="text-6xl font-bold mb-4">
+            <span id="modalNumber">0</span>
+        </div>
+        <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Close
+        </button>
+    </div>
+
     <script>
         $(document).ready(function() {
             // Add new range group
@@ -104,9 +134,50 @@
                 }
 
                 const randomIndex = Math.floor(Math.random() * availableNumbers.length);
-                const randomNum = availableNumbers[randomIndex];
-                $('#randomNumber').text(randomNum);
+                const finalNumber = availableNumbers[randomIndex];
+
+                // Show modal and start animation
+                $('.modal-backdrop, .modal').show();
+                
+                let currentNumber = availableNumbers[0];
+                const animationDuration = 2000;
+                const interval = 50;
+                const startTime = Date.now();
+
+                const animation = setInterval(function() {
+                    const elapsedTime = Date.now() - startTime;
+                    
+                    if (elapsedTime < animationDuration) {
+                        currentNumber = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+                        $('#modalNumber').text(currentNumber);
+                    } else {
+                        clearInterval(animation);
+                        $('#modalNumber').text(finalNumber);
+                    }
+                }, interval);
+            });
+
+            // Handle modal close
+            $('#closeModal, .modal-backdrop').click(function() {
+                $('.modal-backdrop, .modal').hide();
+                
+                // Add the chosen number to exclude list
+                const chosenNumber = $('#modalNumber').text();
+                const excludeInput = $('#excludeNumbers');
+                const currentExclude = excludeInput.val();
+                
+                excludeInput.val(currentExclude ? 
+                    currentExclude + ',' + chosenNumber : 
+                    chosenNumber);
+                
+                // Update the main result display
+                $('#randomNumber').text(chosenNumber);
                 $('#result').removeClass('hidden');
+            });
+
+            // Prevent modal close when clicking modal content
+            $('.modal').click(function(e) {
+                e.stopPropagation();
             });
         });
     </script>
