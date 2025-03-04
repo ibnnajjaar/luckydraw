@@ -39,7 +39,15 @@
             </label>
         </div>
         
-        <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">Lucky Number Generator</h1>
+        <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">
+            <span id="titleText" 
+                  class="cursor-pointer hover:bg-blue-50 px-2 py-1 rounded transition-colors" 
+                  title="Click to edit">Lucky Number Generator</span>
+            <input type="text" 
+                   id="titleInput" 
+                   class="hidden text-3xl font-bold text-center w-full text-blue-600 outline-none border-b-2 border-blue-500"
+                   value="Lucky Number Generator">
+        </h1>
         
         <div class="space-y-4">
             <div id="rangeContainer" class="space-y-3">
@@ -88,7 +96,6 @@
             Close
         </button>
     </div>
-
     <script>
         $(document).ready(function() {
             // Load saved logo from localStorage
@@ -96,7 +103,27 @@
             if (savedLogo) {
                 $('#logoImage').attr('src', savedLogo);
             }
-
+            // Load saved title from localStorage
+            const savedTitle = localStorage.getItem('luckyDrawTitle');
+            if (savedTitle) {
+                $('#titleText').text(savedTitle);
+                $('#titleInput').val(savedTitle);
+            }
+            // Make title editable
+            $('#titleText').click(function() {
+                $(this).addClass('hidden');
+                $('#titleInput').removeClass('hidden').focus();
+            });
+            // Handle title input blur and enter key
+            $('#titleInput').on('blur keypress', function(e) {
+                if (e.type === 'blur' || e.which === 13) {
+                    e.preventDefault();
+                    const newTitle = $(this).val().trim() || 'Lucky Number Generator';
+                    $('#titleText').text(newTitle).removeClass('hidden');
+                    $(this).addClass('hidden');
+                    localStorage.setItem('luckyDrawTitle', newTitle);
+                }
+            });
             // Handle logo upload
             $('#logoInput').change(function(e) {
                 const file = e.target.files[0];
