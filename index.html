@@ -27,29 +27,27 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <!-- Add logo section -->
-        <div class="mb-6 text-center">
+<body class="bg-blue-50 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-10 rounded-2xl shadow-xl max-w-md w-full">
+        <!-- Logo section -->
+        <div class="mb-8 text-center">
             <input type="file" id="logoInput" accept="image/*" class="hidden">
             <label for="logoInput" class="cursor-pointer inline-block">
                 <img id="logoImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24'%3E%3Cpath fill='%234B5563' d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/%3E%3C/svg%3E" 
                     alt="Logo" 
-                    class="w-24 h-24 mx-auto mb-4 border-2 border-dashed border-gray-300 p-2 rounded-lg hover:border-blue-500 transition-colors">
+                    class="w-28 h-28 mx-auto mb-4 border-2 border-dashed border-blue-200 p-3 rounded-2xl hover:border-blue-400 transition-all">
             </label>
         </div>
-        
-        <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">
-            <span id="titleText" 
-                  class="cursor-pointer hover:bg-blue-50 px-2 py-1 rounded transition-colors" 
-                  title="Click to edit">Lucky Number Generator</span>
-            <input type="text" 
-                   id="titleInput" 
-                   class="hidden text-3xl font-bold text-center w-full text-blue-600 outline-none border-b-2 border-blue-500"
-                   value="Lucky Number Generator">
+
+        <h1 class="text-4xl font-bold text-center mb-8 text-blue-900">
+            <span id="titleText" class="cursor-pointer hover:bg-blue-50 px-3 py-1 rounded-lg transition-all">
+                Lucky Number Generator
+            </span>
+            <input type="text" id="titleInput" class="hidden text-4xl font-bold text-center w-full text-blue-900 outline-none border-b-2 border-blue-400">
         </h1>
-        
-        <div class="space-y-4">
+
+        <!-- Update input styles -->
+        <div class="space-y-6">
             <div id="rangeContainer" class="space-y-3">
                 <div class="flex gap-4 items-center range-group">
                     <div class="flex-1">
@@ -68,7 +66,7 @@
                 </div>
             </div>
 
-            <button id="addRange" class="w-full border-2 border-dashed border-gray-300 text-gray-600 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <button id="addRange" class="w-full border-2 border-dashed border-blue-200 text-blue-600 py-3 rounded-xl hover:bg-blue-50 transition-all">
                 Add Another Range
             </button>
 
@@ -77,23 +75,19 @@
                 <input type="text" id="excludeNumbers" placeholder="e.g., 3,7,13" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             
-            <button id="spinButton" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors">
+            <button id="spinButton" class="w-full bg-blue-600 text-white py-4 rounded-xl hover:bg-blue-700 transition-all text-lg font-semibold">
                 Spin!
             </button>
-            
-            <div id="result" class="text-center text-4xl font-bold text-gray-800 mt-6 hidden">
-                <span id="randomNumber"></span>
-            </div>
         </div>
     </div>
-    <!-- Add modal markup at the end of body -->
-    <div class="modal-backdrop"></div>
-    <div class="modal hidden bg-white p-[50px] rounded-lg shadow-2xl w-96 text-center">
-        <div class="text-2xl mb-4">Winner!</div>
-        <div class="text-9xl font-bold mb-4">
+
+    <!-- Modal update -->
+    <div class="modal hidden bg-white p-16 rounded-3xl shadow-2xl w-[800px] text-center">
+        <div class="text-3xl font-medium text-blue-900 mb-6">Winner!</div>
+        <div class="text-[180px] font-bold mb-8 text-blue-600 leading-none">
             <span id="modalNumber">0</span>
         </div>
-        <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        <button id="closeModal" class="mt-4 px-8 py-4 bg-blue-600 text-white text-xl rounded-xl hover:bg-blue-700 transition-all font-medium">
             Close
         </button>
     </div>
