@@ -12,15 +12,31 @@
         <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">Lucky Number Generator</h1>
         
         <div class="space-y-4">
-            <div class="flex gap-4">
-                <div class="flex-1">
-                    <label class="block text-gray-700 mb-2">Min Number</label>
-                    <input type="number" id="minNumber" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div id="rangeContainer" class="space-y-3">
+                <div class="flex gap-4 items-center range-group">
+                    <div class="flex-1">
+                        <label class="block text-gray-700 mb-2">Min Number</label>
+                        <input type="number" class="min-number w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-gray-700 mb-2">Max Number</label>
+                        <input type="number" class="max-number w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <button class="remove-range mt-8 text-red-500 hover:text-red-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                <div class="flex-1">
-                    <label class="block text-gray-700 mb-2">Max Number</label>
-                    <input type="number" id="maxNumber" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+            </div>
+
+            <button id="addRange" class="w-full border-2 border-dashed border-gray-300 text-gray-600 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                Add Another Range
+            </button>
+
+            <div>
+                <label class="block text-gray-700 mb-2">Exclude Numbers (comma separated)</label>
+                <input type="text" id="excludeNumbers" placeholder="e.g., 3,7,13" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             
             <button id="spinButton" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors">
@@ -32,24 +48,63 @@
             </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function() {
+            // Add new range group
+            $('#addRange').click(function() {
+                const newRange = $('.range-group').first().clone();
+                newRange.find('input').val('');
+                $('#rangeContainer').append(newRange);
+            });
+
+            // Remove range group
+            $(document).on('click', '.remove-range', function() {
+                if ($('.range-group').length > 1) {
+                    $(this).closest('.range-group').remove();
+                }
+            });
+
             $('#spinButton').click(function() {
-                const min = parseInt($('#minNumber').val());
-                const max = parseInt($('#maxNumber').val());
+                let availableNumbers = [];
+                let isValid = true;
+
+                // Collect numbers from all ranges
+                $('.range-group').each(function() {
+                    const min = parseInt($(this).find('.min-number').val());
+                    const max = parseInt($(this).find('.max-number').val());
+
+                    if (isNaN(min) || isNaN(max)) {
+                        alert('Please enter valid numbers in all ranges');
+                        isValid = false;
+                        return false;
+                    }
+
+                    if (min >= max) {
+                        alert('Maximum number must be greater than minimum number in all ranges');
+                        isValid = false;
+                        return false;
+                    }
+
+                    for (let i = min; i <= max; i++) {
+                        availableNumbers.push(i);
+                    }
+                });
+
+                if (!isValid) return;
+
+                // Process excluded numbers
+                const excludeStr = $('#excludeNumbers').val().trim();
+                const excludeNumbers = excludeStr ? excludeStr.split(',').map(num => parseInt(num.trim())) : [];
                 
-                if (isNaN(min) || isNaN(max)) {
-                    alert('Please enter valid numbers');
+                availableNumbers = availableNumbers.filter(num => !excludeNumbers.includes(num));
+
+                if (availableNumbers.length === 0) {
+                    alert('No available numbers to choose from after exclusions');
                     return;
                 }
-                
-                if (min >= max) {
-                    alert('Maximum number must be greater than minimum number');
-                    return;
-                }
-                
-                const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+
+                const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+                const randomNum = availableNumbers[randomIndex];
                 $('#randomNumber').text(randomNum);
                 $('#result').removeClass('hidden');
             });
