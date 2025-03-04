@@ -6,6 +6,7 @@
     <title>Lucky Number Generator</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         .modal-backdrop {
             display: none;
@@ -153,6 +154,36 @@
                     } else {
                         clearInterval(animation);
                         $('#modalNumber').text(finalNumber);
+                        
+                        // Add confetti celebration
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                        
+                        // Continue confetti for 2 seconds
+                        const duration = 2000;
+                        const end = Date.now() + duration;
+                        
+                        (function frame() {
+                            confetti({
+                                particleCount: 2,
+                                angle: 60,
+                                spread: 55,
+                                origin: { x: 0 }
+                            });
+                            confetti({
+                                particleCount: 2,
+                                angle: 120,
+                                spread: 55,
+                                origin: { x: 1 }
+                            });
+                            
+                            if (Date.now() < end) {
+                                requestAnimationFrame(frame);
+                            }
+                        }());
                     }
                 }, interval);
             });
@@ -160,6 +191,9 @@
             // Handle modal close
             $('#closeModal, .modal-backdrop').click(function() {
                 $('.modal-backdrop, .modal').hide();
+                
+                // Clear any remaining confetti
+                confetti.reset();
                 
                 // Add the chosen number to exclude list
                 const chosenNumber = $('#modalNumber').text();
