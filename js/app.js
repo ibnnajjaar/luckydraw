@@ -1,4 +1,20 @@
 $(document).ready(function() {
+    // Drawer controls
+    $('.settings-button').click(function() {
+        $('.drawer').addClass('open');
+    });
+
+    $('.close-drawer').click(function() {
+        $('.drawer').removeClass('open');
+    });
+
+    // Close drawer when clicking outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.drawer, .settings-button').length) {
+            $('.drawer').removeClass('open');
+        }
+    });
+
     // Load saved logo from localStorage
     const savedLogo = localStorage.getItem('luckyDrawLogo');
     if (savedLogo) {
